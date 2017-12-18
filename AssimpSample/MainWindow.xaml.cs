@@ -83,6 +83,9 @@ namespace AssimpSample
         /// <param name="args">The <see cref="SharpGL.SceneGraph.OpenGLEventArgs"/> instance containing the event data.</param>
         private void openGLControl_OpenGLInitialized(object sender, OpenGLEventArgs args)
         {
+            labela0.Content = m_world.Ambijentalna0.ToString();
+            labela1.Content = m_world.Ambijentalna1.ToString();
+            labela2.Content = m_world.Ambijentalna2.ToString();
             m_world.Initialize(args.OpenGL);
         }
 
@@ -96,17 +99,32 @@ namespace AssimpSample
             m_world.Resize(args.OpenGL, (int)openGLControl.Width, (int)openGLControl.Height);
         }
 
+
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
             {
-                case Key.F10: this.Close(); break;
-                case Key.W: m_world.RotationX -= 5.0f; break;
-                case Key.S: m_world.RotationX += 5.0f; break;
+                case Key.F4: this.Close(); break;
+                case Key.W:
+                   // faza 2 : tacka 8
+                    if(m_world.RotationX > 15.0f) { 
+                        m_world.RotationX -= 5.0f;
+                        Console.WriteLine(m_world.RotationX.ToString());
+                    }
+                    break;
+                case Key.S:
+
+                    if (m_world.RotationX < 150.0f)
+                    {
+                        m_world.RotationX += 5.0f;
+                        Console.WriteLine(m_world.RotationX.ToString());
+                    }
+
+                    break;
                 case Key.A: m_world.RotationY -= 5.0f; break;
                 case Key.D: m_world.RotationY += 5.0f; break;
-                case Key.Add: m_world.SceneDistance += 7.0f; break;
-                case Key.Subtract: m_world.SceneDistance -= 7.0f; break;
+                case Key.Add: m_world.SceneDistance += 5.0f; break;
+                case Key.Subtract: m_world.SceneDistance -= 5.0f; break;
                 case Key.F2:
                     OpenFileDialog opfModel = new OpenFileDialog();
                     bool result = (bool) opfModel.ShowDialog();
@@ -126,6 +144,97 @@ namespace AssimpSample
                         }
                     }
                     break;
+            }
+        }
+
+        private void umanjiButton_Click(object sender, RoutedEventArgs e)
+        {
+           
+            if(m_world.ScaleX > 0.2f)
+            {
+                m_world.ScaleX -= 0.2f;
+            }
+           // Console.WriteLine(m_world.ScaleX.ToString());
+        }
+
+        private void uvecajButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_world.ScaleX < 3.0f)
+            {
+                m_world.ScaleX += 0.2f;
+            }
+           // Console.WriteLine(m_world.ScaleX.ToString());
+        }
+
+
+
+        private void addAmbient0_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_world.Ambijentalna0 < 3.0f)
+            {
+                m_world.Ambijentalna0 += 0.2f;
+                labela0.Content = m_world.Ambijentalna0.ToString();
+            }
+
+            Console.WriteLine(m_world.Ambijentalna0.ToString());
+        }
+
+        private void subAmbient0_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_world.Ambijentalna0 > 0.0f)
+            {
+                m_world.Ambijentalna0 -= 0.2f;
+                labela0.Content = m_world.Ambijentalna0.ToString();
+            }
+            Console.WriteLine(m_world.Ambijentalna0.ToString());
+        }
+
+
+        private void subAmbient1_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_world.Ambijentalna1 > 0.0f)
+            {
+                m_world.Ambijentalna1 -= 0.2f;
+                labela1.Content = m_world.Ambijentalna1.ToString();
+            }
+            Console.WriteLine(m_world.Ambijentalna1.ToString());
+        }
+
+        private void addAmbient2_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_world.Ambijentalna2 < 3.0f)
+            {
+                m_world.Ambijentalna2 += 0.2f;
+                labela2.Content = m_world.Ambijentalna2.ToString();
+            }
+            Console.WriteLine(m_world.Ambijentalna2.ToString());
+        }
+
+        private void subAmbient2_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_world.Ambijentalna2 > 0.0f)
+            {
+                m_world.Ambijentalna2 -= 0.2f;
+                labela2.Content = m_world.Ambijentalna2.ToString();
+            }
+            Console.WriteLine(m_world.Ambijentalna2.ToString());
+        }
+
+        private void addAmbient1_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_world.Ambijentalna1 < 3.0f)
+            {
+                m_world.Ambijentalna1 += 0.2f;
+                labela1.Content = m_world.Ambijentalna1.ToString();
+            }
+            Console.WriteLine(m_world.Ambijentalna1.ToString());
+        }
+
+        private void uvecajButton_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (m_world.ScaleX < 3.0f)
+            {
+                m_world.ScaleX += 0.2f;
             }
         }
     }

@@ -35,21 +35,13 @@ namespace AssimpSample
         @"C:\Users\Vladimir\Desktop\AssimpSample\AssimpSample\bin\Debug\images\wood.jpg"};
         private uint[] m_textures = null;
         private readonly int m_textureCount = Enum.GetNames(typeof(TextureObjects)).Length;
-        private float[] pointLinePolygonVertices = new float[]
-                {
-                    0, 0f,
-                    0.5f, 0.2f,
-                    0.4f, 0.3f,
-                    0.2f, 0.4f,
-                    -0.1f, 0.5f,
-                    -0.4f, 0.4f,
-                    -0.6f, 0.2f,
-                    -0.6f, -0.1f,
-                    -0.5f,-0.3f,
-                    -0.1f, -0.5f,
-                    0.3f, -0.4f,
-                    0.4f, -0.1f
-                };
+        private float kamera;
+
+        private float scale_x;
+
+        private float ambijentalna0;
+        private float ambijentalna1;
+        private float ambijentalna2;
 
         /// <summary>
         ///	 Ugao rotacije Meseca
@@ -125,6 +117,36 @@ namespace AssimpSample
             set { m_xRotation = value; }
         }
 
+        public float Kamera
+        {
+            get { return kamera; }
+            set { m_xRotation = value; }
+        }
+
+        public float ScaleX
+        {
+            get { return scale_x; }
+            set { scale_x = value; }
+        }
+
+        public float Ambijentalna0
+        {
+            get { return ambijentalna0; }
+            set { ambijentalna0 = value; }
+        }
+
+        public float Ambijentalna1
+        {
+            get { return ambijentalna1; }
+            set { ambijentalna1 = value; }
+        }
+
+        public float Ambijentalna2
+        {
+            get { return ambijentalna2; }
+            set { ambijentalna2 = value; }
+        }
+
         /// <summary>
         ///	 Ugao rotacije sveta oko Y ose.
         /// </summary>
@@ -178,6 +200,12 @@ namespace AssimpSample
             this.m_height = height;
             m_textures = new uint[m_textureCount];
 
+            scale_x = 1.0f;
+            ambijentalna0 = 0.8f;
+            ambijentalna1 = 0.8f;
+            ambijentalna2 = 0.0f;
+
+
         }
 
         /// <summary>
@@ -192,9 +220,10 @@ namespace AssimpSample
 
         #region Metode
 
-        private void SetupWhiteLighting(OpenGL gl)
+        private void SetupLighting(OpenGL gl)
         {
-         //   gl.PushMatrix(); 
+         
+            // bela svetlost
             float[] global_ambient = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
             gl.LightModel(OpenGL.GL_LIGHT_MODEL_AMBIENT, global_ambient);  
             float[] light0pos = new float[] { 0.0f,30.0f,-20.0f, 1.0f }; //pozicioniranje svetlosti na tacku iznad modela
@@ -202,9 +231,7 @@ namespace AssimpSample
             float[] light0ambient = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
             float[] light0diffuse = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
             float[] light0specular = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
-            /*
-            light0pos[0] = 10.0f;
-            light0pos[2] = 30.0f;*/
+
 
             gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_SPOT_CUTOFF, 180.0f);  // tackasti izvor svetlosti je se ugao rasipanja onog reflektora
                                                                         // 360 stepeni (2 puta 180, 180 je pola ugla)
@@ -216,43 +243,33 @@ namespace AssimpSample
             // ukljuciti svetla
             gl.Enable(OpenGL.GL_LIGHTING);
             gl.Enable(OpenGL.GL_LIGHT0);
+            
 
-            //Za Quadric objekte podesiti automatsko generisanje normala
-            gl.Enable(OpenGL.GL_NORMALIZE);
-           // gl.PopMatrix();
 
-        }
+            //zuta svetlost
+            float[] global_ambient_yellow = new float[] { 0.0f, 0.0f, 0.0f, 1.0f };
+            gl.LightModel(OpenGL.GL_LIGHT_MODEL_AMBIENT, global_ambient_yellow);
+            float[] light0pos_yellow = new float[] { 0.0f, 40.0f, -50.0f, 1.0f };
+         
+           float[] light0ambient_yellow = new float[] { ambijentalna0, ambijentalna1, ambijentalna2, 1.0f };
+            float[] light0diffuse_yellow = new float[] { 0.5f, 0.5f, 0.0f, 1.0f };
+            float[] light0specular_yellow = new float[] { 0.9f, 0.9f, 0.0f, 1.0f };
 
-        private void SetupYellowLighting(OpenGL gl)
-        {
-            //   gl.PushMatrix(); 
-           // gl.Rotate(90.0f, 0.0f,0.0f);
-           // gl.Translate(0.0f,0.0f,0.0f);
-
-            float[] global_ambient = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
-            gl.LightModel(OpenGL.GL_LIGHT_MODEL_AMBIENT, global_ambient);
-            float[] light0pos = new float[] { 0.0f, 40.0f, 30.0f, 1.0f }; //pozicioniranje svetlosti na tacku iznad modela
-            // podesena ambijentalana, difuzna i spekularna komponenta
-            float[] light0ambient = new float[] { 1.0f, 1.0f, 0.0f, 1.0f };
-            float[] light0diffuse = new float[] { 1.0f, 1.0f, 0.0f, 1.0f };
-            float[] light0specular = new float[] { 1.0f, 1.0f, 0.0f, 1.0f };
-            /*
-            light0pos[0] = 10.0f;
-            light0pos[2] = 30.0f;*/
-
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_SPOT_CUTOFF, 30.0f);  
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_POSITION, light0pos);
+            float[] direction = { 0.0f, -1.0f, 0.0f };
+            gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_SPOT_DIRECTION, direction);
+            gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_SPOT_CUTOFF, 30.0f);
+            gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_POSITION, light0pos_yellow);
             //setovanje komponenti
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_AMBIENT, light0ambient);
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_DIFFUSE, light0diffuse);
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_SPECULAR, light0specular);
+            gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_AMBIENT, light0ambient_yellow);
+            gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_DIFFUSE, light0diffuse_yellow);
+            gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_SPECULAR, light0specular_yellow);
             // ukljuciti svetla
             gl.Enable(OpenGL.GL_LIGHTING);
-            gl.Enable(OpenGL.GL_LIGHT0);
+            gl.Enable(OpenGL.GL_LIGHT1);
 
-            //Za Quadric objekte podesiti automatsko generisanje normala
             gl.Enable(OpenGL.GL_NORMALIZE);
-            // gl.PopMatrix();
+
+
 
         }
 
@@ -263,7 +280,8 @@ namespace AssimpSample
         {
             gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             gl.Color(1f, 1f, 0f);
-           
+            kamera = -5;
+            
             gl.ShadeModel(OpenGL.GL_FLAT);
             gl.Enable(OpenGL.GL_DEPTH_TEST);
             gl.Enable(OpenGL.GL_CULL_FACE);
@@ -272,9 +290,9 @@ namespace AssimpSample
             gl.Enable(OpenGL.GL_COLOR_MATERIAL);
             gl.ColorMaterial(OpenGL.GL_FRONT, OpenGL.GL_AMBIENT_AND_DIFFUSE);
 
-            //faza 2 : tacka 2 
-           // SetupWhiteLighting(gl);
-            SetupYellowLighting(gl);
+            //faza 2 : tacka 2  + tacka 9
+            SetupLighting(gl);
+
 
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.TexEnv(OpenGL.GL_TEXTURE_ENV, OpenGL.GL_TEXTURE_ENV_MODE, OpenGL.GL_DECAL);
@@ -297,7 +315,11 @@ namespace AssimpSample
 
                 gl.Build2DMipmaps(OpenGL.GL_TEXTURE_2D, (int)OpenGL.GL_RGBA8, image.Width, image.Height, OpenGL.GL_BGRA, OpenGL.GL_UNSIGNED_BYTE, imageData.Scan0);
                 gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_LINEAR);		// Linear Filtering
-                gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);		// Linear Filtering
+                gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);      // Linear Filtering
+
+                // faza 2 : tacka 3
+                gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_S, OpenGL.GL_REPEAT);
+                gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_T, OpenGL.GL_REPEAT);
 
                 image.UnlockBits(imageData);
                 image.Dispose();
@@ -315,17 +337,21 @@ namespace AssimpSample
         /// </summary>
         public void Draw(OpenGL gl)
         {
-
-
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             // gl.Scale(3.5f, 3.5f, 3.5f);
+            
             gl.PushMatrix();
-           // gl.Translate(0.0f, 1.0f, -m_sceneDistance);
+            SetupLighting(gl);
+            gl.Scale(scale_x, scale_x, 1);
+            // gl.Translate(0.0f, 1.0f, -m_sceneDistance);
             gl.Translate(0.0f, 1.0f, m_sceneDistance);
             gl.Rotate(m_xRotation, 1.0f, 0.0f, 0.0f);
             gl.Rotate(m_yRotation, 0.0f, 1.0f, 0.0f);
-            //
-
+            
+            //faza 2 : tacka 6
+            gl.LookAt(1.0f,0.0f, kamera, 
+                      -1.0f, -1.0f, -1.0f,
+                      0.0f, 1.0f, 0.0f);
             //postolje
             gl.PushMatrix();
             gl.Disable(OpenGL.GL_TEXTURE_2D);
@@ -348,6 +374,7 @@ namespace AssimpSample
             disk.InnerRadius = 0;
             disk.OuterRadius = 3.0f;
             disk.CreateInContext(gl);
+            // faza 2 : tacka 5
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Carpet]);
             disk.Render(gl, RenderMode.Render);
             gl.PopMatrix();
@@ -360,6 +387,7 @@ namespace AssimpSample
             gl.Scale(3.5f, 0.5f, 3.5f);
             gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             gl.Color(0.30859375f, 0.1484375f, 0.07421875f);
+            // faza 2 : tacka 4
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Wood]);
             cube.Render(gl, RenderMode.Render);
 
@@ -392,7 +420,7 @@ namespace AssimpSample
 
             //tepih?
             gl.PushMatrix();
-            gl.Translate(-5.0f, -8.9f, 5.0f);
+            gl.Translate(-5.0f, -8.5f, 5.0f);
             gl.Rotate(-90.0f, 0.0f, 0.0f);
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Carpet]);
             gl.Begin(OpenGL.GL_QUADS);
@@ -422,29 +450,6 @@ namespace AssimpSample
             m_scene2.Draw();
             gl.PopMatrix();
 
-/*
-            gl.PushMatrix();
-
-                float[] ambient = { 0, 0, 0, 1 };
-                float[] light_color = { 0, 0, 0, 1 };
-                //float[] light_pos = { -1.4f, 0f, -10f, 1 };
-                gl.Scale(0.1f, 0.1f, 0.1f);
-                //zeleni tackasti izvor
-                gl.Light(OpenGL.GL_LIGHT3, OpenGL.GL_AMBIENT, ambient);
-                gl.Light(OpenGL.GL_LIGHT3, OpenGL.GL_DIFFUSE, light_color);
-                gl.Light(OpenGL.GL_LIGHT3, OpenGL.GL_SPOT_CUTOFF, 180f);
-                //malo slabljenja svetlosti da ne bode toliko oci
-                gl.Light(OpenGL.GL_LIGHT3, OpenGL.GL_CONSTANT_ATTENUATION, 100.0f);
-                gl.Light(OpenGL.GL_LIGHT3, OpenGL.GL_LINEAR_ATTENUATION, 50.0f);
-                gl.Light(OpenGL.GL_LIGHT3, OpenGL.GL_QUADRATIC_ATTENUATION, 1.5f);
-                //Gl.glLightf(Gl.GL_LIGHT3, Gl.GL_SPOT_EXPONENT, 120f);
-                gl.Enable(OpenGL.GL_LIGHT3);
-                float[] microwave_light_pos = { 0.0f, 5.0f, 0.0f };
-                gl.Light(OpenGL.GL_LIGHT3, OpenGL.GL_POSITION, microwave_light_pos);
-                // Glu.gluSphere(light_source, 5f, 64, 64);
-                // Gl.glMaterialfv(Gl.GL_FRONT, Gl.GL_EMISSION, light_color);
-
-            gl.PopMatrix();*/
 
             gl.PopMatrix();
             gl.Disable(OpenGL.GL_TEXTURE_2D);
