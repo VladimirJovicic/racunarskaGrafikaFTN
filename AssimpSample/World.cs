@@ -43,6 +43,10 @@ namespace AssimpSample
         private float ambijentalna1;
         private float ambijentalna2;
 
+        private float visinaStola;
+        private float visinaTepiha;
+        private float visinaPostolja;
+        private float visinaTable;
         /// <summary>
         ///	 Ugao rotacije Meseca
         /// </summary>
@@ -156,6 +160,31 @@ namespace AssimpSample
             set { m_yRotation = value; }
         }
 
+        public float VisinaStola
+        {
+            get { return visinaStola; }
+            set { visinaStola = value; }
+        }
+
+        public float VisinaTepiha
+        {
+            get { return visinaTepiha; }
+            set { visinaTepiha = value; }
+        }
+
+        public float VisinaPostolja
+        {
+            get { return visinaPostolja; }
+            set { visinaPostolja = value; }
+        }
+
+        public float VisinaTable
+        {
+            get { return visinaTable; }
+            set { visinaTable = value; }
+        }
+
+
         /// <summary>
         ///	 Udaljenost scene od kamere.
         /// </summary>
@@ -205,7 +234,10 @@ namespace AssimpSample
             ambijentalna1 = 0.8f;
             ambijentalna2 = 0.0f;
 
-
+            visinaStola = 3.0f;
+            visinaTepiha = -8.5f;
+            visinaPostolja = -8.0f;
+            visinaTable = -1.5f;
         }
 
         /// <summary>
@@ -383,7 +415,7 @@ namespace AssimpSample
 
             //sto
             gl.PushMatrix();
-            gl.Translate(0.0f, -1.5f, 0.0f);
+            gl.Translate(0.0f, visinaTable, 0.0f);
             gl.Scale(3.5f, 0.5f, 3.5f);
             gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             gl.Color(0.30859375f, 0.1484375f, 0.07421875f);
@@ -400,7 +432,7 @@ namespace AssimpSample
 
             gl.Translate(0.0f, -5.0f, 0.0f);
             // gl.Rotate(-90f, 180f, 0f);
-            gl.Scale(0.5f, 3.0f, 0.5f);
+            gl.Scale(0.5f, visinaStola, 0.5f);
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Wood]);
             c.Render(gl, RenderMode.Render);
             gl.PopMatrix();
@@ -409,10 +441,8 @@ namespace AssimpSample
             //ono dole, hehe
             gl.PushMatrix();
             Cube s = new Cube();
-           // s.Radius = 1;
-            gl.Translate(0.0f, -8.0f, 0.0f);
+            gl.Translate(0.0f, visinaPostolja, 0.0f);
             gl.Scale(3.5f, 0.4, 3.5f);
-           // s.CreateInContext(gl);
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Wood]);
             s.Render(gl, RenderMode.Render);        
             gl.PopMatrix();
@@ -420,7 +450,7 @@ namespace AssimpSample
 
             //tepih?
             gl.PushMatrix();
-            gl.Translate(-5.0f, -8.5f, 5.0f);
+            gl.Translate(-5.0f, visinaTepiha, 5.0f);
             gl.Rotate(-90.0f, 0.0f, 0.0f);
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Carpet]);
             gl.Begin(OpenGL.GL_QUADS);

@@ -12,16 +12,18 @@
             DrawFPS="True" RenderContextType="FBO" FrameRate="10">
 
         </sharpGL:OpenGLControl>
-        <Button Margin="20,255,468,40" Content="-" Name="umanjiButton" Click="umanjiButton_Click"/>
-        <Button Margin="20,226,468,69" Content="+" Name="uvecajButton" RenderTransformOrigin="0.448,-0.625" Click="uvecajButton_Click_1"/>
-        <Button Margin="17,19,471,276" Content="+" x:Name="addAmbient0" RenderTransformOrigin="0.448,-0.625" Click="addAmbient0_Click" />
-        <Button Margin="17,73,471,222" Content="-" x:Name="subAmbient0" RenderTransformOrigin="0.448,-0.625" Click="subAmbient0_Click" />
-        <Button Margin="51,19,437,276" Content="+" x:Name="addAmbient1" RenderTransformOrigin="0.448,-0.625" Click="addAmbient1_Click"/>
-        <Button Margin="51,73,437,222" Content="-" x:Name="subAmbient1" RenderTransformOrigin="0.448,-0.625" Click="subAmbient1_Click"/>
-        <Button Margin="85,19,403,276" Content="+" x:Name="addAmbient2" RenderTransformOrigin="0.448,-0.625" Click="addAmbient2_Click" />
-        <Button Margin="85,73,403,222" Content="-" x:Name="subAmbient2" RenderTransformOrigin="0.448,-0.625" Click="subAmbient2_Click" />
+        <Button Margin="17,0,0,40" Content="-" Name="umanjiButton" Click="umanjiButton_Click" Height="24" Width="24" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        <Button Margin="17,0,0,69" Content="+" Name="uvecajButton" Click="uvecajButton_Click_1" Height="24" Width="24" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        <Button Margin="17,19,471,276" Content="+" x:Name="addAmbient0" Click="addAmbient0_Click"  Height="17" Width="19" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Margin="17,73,471,222" Content="-" x:Name="subAmbient0" Click="subAmbient0_Click" Height="17" Width="19" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Margin="51,19,437,276" Content="+" x:Name="addAmbient1" Click="addAmbient1_Click" Height="17" Width="19" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Margin="51,73,437,222" Content="-" x:Name="subAmbient1" Click="subAmbient1_Click" Height="17" Width="19" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Margin="85,19,403,276" Content="+" x:Name="addAmbient2"  Click="addAmbient2_Click" Height="17" Width="19" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Margin="85,73,403,222" Content="-" x:Name="subAmbient2"  Click="subAmbient2_Click" Height="17" Width="19" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Label x:Name="labela1" Content="" HorizontalAlignment="Left" Height="21" Margin="51,47,0,0" VerticalAlignment="Top" Width="29" Foreground="#FF0DEC35" Background="#FF020202" FontSize="10" FontWeight="Bold"/>
         <Label x:Name="labela2" Content="" HorizontalAlignment="Left" Height="21" Margin="85,47,0,0" VerticalAlignment="Top" Width="29" Foreground="#FF0DEC35" Background="#FF020202" FontSize="10" FontWeight="Bold"/>
         <Label x:Name="labela0" Content="" HorizontalAlignment="Left" Height="21" Margin="17,47,0,0" VerticalAlignment="Top" Width="29" Foreground="#FF0DEC35" Background="#FF020202" FontSize="10" FontWeight="Bold"/>
+        <Button Margin="17,111,0,184" Content="+" x:Name="uvecajVisinuStolaButton"  Height="24" Width="24" HorizontalAlignment="Left" VerticalAlignment="Center" Click="uvecajVisinuStolaButton_Click"/>
+        <Button Margin="17,140,0,155" Content="-" x:Name="umanjiVisinuStolaButton"  Height="24" Width="24" HorizontalAlignment="Left" VerticalAlignment="Center" Click="umanjiVisinuStolaButton_Click"/>
     </Grid>
 </Window>

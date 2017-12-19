@@ -176,15 +176,24 @@ namespace AssimpSample
                 labela0.Content = m_world.Ambijentalna0.ToString();
             }
 
+            if(m_world.Ambijentalna0 < 0.1f)
+            {
+                labela0.Content = "0.0";
+            }
             Console.WriteLine(m_world.Ambijentalna0.ToString());
         }
 
         private void subAmbient0_Click(object sender, RoutedEventArgs e)
         {
-            if (m_world.Ambijentalna0 > 0.0f)
+            if (m_world.Ambijentalna0 > 0.1f)
             {
                 m_world.Ambijentalna0 -= 0.2f;
                 labela0.Content = m_world.Ambijentalna0.ToString();
+            }
+
+            if (m_world.Ambijentalna0 < 0.1f)
+            {
+                labela0.Content = "0.0";
             }
             Console.WriteLine(m_world.Ambijentalna0.ToString());
         }
@@ -192,10 +201,15 @@ namespace AssimpSample
 
         private void subAmbient1_Click(object sender, RoutedEventArgs e)
         {
-            if (m_world.Ambijentalna1 > 0.0f)
+            if (m_world.Ambijentalna1 > 0.1f)
             {
                 m_world.Ambijentalna1 -= 0.2f;
                 labela1.Content = m_world.Ambijentalna1.ToString();
+            }
+
+            if (m_world.Ambijentalna1 < 0.1f)
+            {
+                labela1.Content = "0.0";
             }
             Console.WriteLine(m_world.Ambijentalna1.ToString());
         }
@@ -207,15 +221,23 @@ namespace AssimpSample
                 m_world.Ambijentalna2 += 0.2f;
                 labela2.Content = m_world.Ambijentalna2.ToString();
             }
+            if (m_world.Ambijentalna2 < 0.1f)
+            {
+                labela2.Content = "0.0";
+            }
             Console.WriteLine(m_world.Ambijentalna2.ToString());
         }
 
         private void subAmbient2_Click(object sender, RoutedEventArgs e)
         {
-            if (m_world.Ambijentalna2 > 0.0f)
+            if (m_world.Ambijentalna2 > 0.1f)
             {
                 m_world.Ambijentalna2 -= 0.2f;
                 labela2.Content = m_world.Ambijentalna2.ToString();
+            }
+            if (m_world.Ambijentalna2 < 0.1f)
+            {
+                labela2.Content = "0.0";
             }
             Console.WriteLine(m_world.Ambijentalna2.ToString());
         }
@@ -227,6 +249,11 @@ namespace AssimpSample
                 m_world.Ambijentalna1 += 0.2f;
                 labela1.Content = m_world.Ambijentalna1.ToString();
             }
+
+            if (m_world.Ambijentalna1 < 0.1f)
+            {
+                labela1.Content = "0.0";
+            }
             Console.WriteLine(m_world.Ambijentalna1.ToString());
         }
 
@@ -235,6 +262,30 @@ namespace AssimpSample
             if (m_world.ScaleX < 3.0f)
             {
                 m_world.ScaleX += 0.2f;
+            }
+        }
+
+        private void uvecajVisinuStolaButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (m_world.VisinaStola < 8.0f)
+            {
+                m_world.VisinaStola += 0.5f;
+                m_world.VisinaTepiha -= 0.5f;
+                m_world.VisinaPostolja -= 0.5f;
+                m_world.VisinaTable += 0.5f;
+            }
+        }
+
+        private void umanjiVisinuStolaButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (m_world.VisinaStola > 0.5f)
+            {
+                m_world.VisinaStola -= 0.5f;
+                m_world.VisinaTepiha += 0.5f;
+                m_world.VisinaPostolja += 0.5f;
+                m_world.VisinaTable -= 0.5f;
             }
         }
     }
