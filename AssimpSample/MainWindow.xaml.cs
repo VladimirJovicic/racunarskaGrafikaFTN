@@ -50,6 +50,7 @@ namespace AssimpSample
                 m_world = new World(
                        Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "3D Models\\microwave"), "microwave.3ds",
                        Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "3D Models\\burger"), "hamburger.3ds",
+                       Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "3D Models\\microwave"), "door.3ds",
                        (int)openGLControl.Width, (int)openGLControl.Height, openGLControl.OpenGL);
 
 
@@ -121,6 +122,9 @@ namespace AssimpSample
                     }
 
                     break;
+                case Key.C:
+                    m_world.setTimer();
+                    break;
                 case Key.A: m_world.RotationY -= 5.0f; break;
                 case Key.D: m_world.RotationY += 5.0f; break;
                 case Key.Add: m_world.SceneDistance += 5.0f; break;
@@ -133,7 +137,7 @@ namespace AssimpSample
 
                         try
                         {
-                            World newWorld = new World(Directory.GetParent(opfModel.FileName).ToString(), Path.GetFileName(opfModel.FileName)," " ," ",(int)openGLControl.Width, (int)openGLControl.Height, openGLControl.OpenGL);
+                            World newWorld = new World(Directory.GetParent(opfModel.FileName).ToString(), Path.GetFileName(opfModel.FileName)," " ," "," "," ",(int)openGLControl.Width, (int)openGLControl.Height, openGLControl.OpenGL);
                             m_world.Dispose();
                             m_world = newWorld;
                             m_world.Initialize(openGLControl.OpenGL);
@@ -274,6 +278,10 @@ namespace AssimpSample
                 m_world.VisinaTepiha -= 0.5f;
                 m_world.VisinaPostolja -= 0.5f;
                 m_world.VisinaTable += 0.5f;
+                m_world.VisinaPodloge += 0.5f;
+                m_world.VisinaMikrotalasne += 0.5f;
+                m_world.VisinaHrane += 0.5f;
+                m_world.VisinaVrati += 0.5f;
             }
         }
 
@@ -286,6 +294,10 @@ namespace AssimpSample
                 m_world.VisinaTepiha += 0.5f;
                 m_world.VisinaPostolja += 0.5f;
                 m_world.VisinaTable -= 0.5f;
+                m_world.VisinaPodloge -= 0.5f;
+                m_world.VisinaMikrotalasne -= 0.5f;
+                m_world.VisinaHrane -= 0.5f;
+                m_world.VisinaVrati -= 0.5f;
             }
         }
     }

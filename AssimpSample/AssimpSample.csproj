@@ -115,6 +115,9 @@
     </None>
     <None Include="3D Models\Duck\duck.dae" />
     <None Include="3D Models\Duck\Thumbs.db" />
+    <None Include="3D Models\microwave\door.3ds">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="3D Models\microwave\microwave.3ds">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

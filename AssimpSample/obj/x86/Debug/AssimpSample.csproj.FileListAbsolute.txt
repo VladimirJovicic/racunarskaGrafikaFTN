@@ -90,3 +90,4 @@ C:\Users\Vladimir\Desktop\AssimpSample - Copy\AssimpSample\obj\x86\Debug\AssimpS
 C:\Users\Vladimir\Desktop\AssimpSample - Copy\AssimpSample\obj\x86\Debug\AssimpSample.pdb
 C:\Users\Vladimir\Desktop\AssimpSample\AssimpSample\bin\Debug\3D Models\burger\hamburger.3ds
 C:\Users\Vladimir\Desktop\AssimpSample\AssimpSample\bin\Debug\3D Models\microwave\microwave.3ds
+C:\Users\Vladimir\Desktop\AssimpSample\AssimpSample\bin\Debug\3D Models\microwave\door.3ds

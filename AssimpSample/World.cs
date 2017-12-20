@@ -16,6 +16,7 @@ using SharpGL.SceneGraph.Core;
 using SharpGL;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Windows.Threading;
 
 
 
@@ -31,7 +32,7 @@ namespace AssimpSample
     {
         #region Atributi
         private enum TextureObjects {Carpet=0,Wood};
-        private string[] m_textureFiles = { @"C:\Users\Vladimir\Desktop\AssimpSample\AssimpSample\bin\Debug\images\tepih.jpg",
+        private string[] m_textureFiles = { @"C:\Users\Vladimir\Desktop\AssimpSample\AssimpSample\images\tepih.jpg",
         @"C:\Users\Vladimir\Desktop\AssimpSample\AssimpSample\bin\Debug\images\wood.jpg"};
         private uint[] m_textures = null;
         private readonly int m_textureCount = Enum.GetNames(typeof(TextureObjects)).Length;
@@ -47,22 +48,33 @@ namespace AssimpSample
         private float visinaTepiha;
         private float visinaPostolja;
         private float visinaTable;
+        private float visinaPodloge;
+        private float visinaPoklopca;
+        private float visinaMikrotalasne;
+        private float visinaHrane;
+        private float visinaVrati;
+        private float hranaX;
+        private float hranaZ;
+        private float vrataX, vrataY, vrataZ;
+        private float rotacijaHrane;
+
+        private DispatcherTimer timer;
         /// <summary>
         ///	 Ugao rotacije Meseca
         /// </summary>
-        private float m_moonRotation = 0.0f;
+
         //   private BitmapFont mf_font = null;
 
         /// <summary>
         ///	 Ugao rotacije Zemlje
         /// </summary>
-        private float m_earthRotation = 0.0f;
 
         /// <summary>
         ///	 Scena koja se prikazuje.
         /// </summary>
         private AssimpScene m_scene;
         private AssimpScene m_scene2;
+        private AssimpScene m_scene_door;
 
         /// <summary>
         ///	 Ugao rotacije sveta oko X ose.
@@ -110,6 +122,12 @@ namespace AssimpSample
             set { m_scene2 = value; }
         }
 
+        public AssimpScene SceneDoor
+        {
+            get { return m_scene_door; }
+            set { m_scene_door = value; }
+        }
+
 
 
         /// <summary>
@@ -127,10 +145,22 @@ namespace AssimpSample
             set { m_xRotation = value; }
         }
 
+        public float VisinaVrati
+        {
+            get { return visinaVrati; }
+            set { visinaVrati = value; }
+        }
+
         public float ScaleX
         {
             get { return scale_x; }
             set { scale_x = value; }
+        }
+
+        public DispatcherTimer Timer
+        {
+            get { return timer; }
+            set { timer = value; }
         }
 
         public float Ambijentalna0
@@ -184,6 +214,36 @@ namespace AssimpSample
             set { visinaTable = value; }
         }
 
+        public float VisinaPostoja
+        {
+            get { return visinaPostolja; }
+            set { visinaPostolja = value; }
+        }
+
+        public float VisinaPodloge
+        {
+            get { return visinaPodloge; }
+            set { visinaPodloge = value; }
+        }
+
+        public float VisinaPoklopca
+        {
+            get { return visinaPoklopca; }
+            set { visinaPoklopca = value; }
+        }
+
+        public float VisinaMikrotalasne
+        {
+            get { return visinaMikrotalasne; }
+            set { visinaMikrotalasne = value; }
+        }
+
+        public float VisinaHrane
+        {
+            get { return visinaHrane; }
+            set { visinaHrane = value; }
+        }
+
 
         /// <summary>
         ///	 Udaljenost scene od kamere.
@@ -219,12 +279,13 @@ namespace AssimpSample
         /// <summary>
         ///  Konstruktor klase World.
         /// </summary>
-        public World(String scenePath, String sceneFileName, String scenePath2, String sceneFileName2,  int width, int height, OpenGL gl)
+        public World(String scenePath, String sceneFileName, String scenePath2, String sceneFileName2, String scenePath3, String sceneFileName3, int width, int height, OpenGL gl)
         {
             cube = new Cube();
             cylinder = new Cylinder();
             this.m_scene = new AssimpScene(scenePath, sceneFileName, gl);
             this.m_scene2 = new AssimpScene(scenePath2, sceneFileName2, gl);
+            this.m_scene_door = new AssimpScene(scenePath3, sceneFileName3, gl);
             this.m_width = width;
             this.m_height = height;
             m_textures = new uint[m_textureCount];
@@ -238,6 +299,19 @@ namespace AssimpSample
             visinaTepiha = -8.5f;
             visinaPostolja = -8.0f;
             visinaTable = -1.5f;
+            visinaPodloge = 0.0f;
+            visinaMikrotalasne = 0.0f;
+            visinaHrane = 0.0f;
+
+            hranaX = 1.0f;
+            hranaZ = 0.5f;
+
+            vrataX = 0.0f;
+            vrataY = 0.0f;
+            vrataZ = 0.0f;
+
+            rotacijaHrane = 0.0f;
+
         }
 
         /// <summary>
@@ -246,6 +320,63 @@ namespace AssimpSample
         ~World()
         {
             this.Dispose(false);
+        }
+
+        public void setTimer()
+        {
+            hranaZ = 10.0f;
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(5);
+            timer.Tick +=new EventHandler(radiAnimaciju);
+            timer.Start();
+        }
+
+        private void radiAnimaciju(object sender, EventArgs e)
+        {
+            if (vrataY < 90.0f && hranaZ > 0.5f)
+            {
+                vrataY += 1.0f;    
+                vrataZ += 0.016f;
+
+            }
+
+            if(vrataY >= 90.0f && hranaZ > 0.5f)
+            {
+                hranaZ -= 0.5f;
+            }
+
+            if (vrataY > 0.0f && hranaZ <= 0.5f)
+            {
+                vrataY -= 1.0f;
+                vrataZ -= 0.016f;             
+            }
+
+            if (vrataY <= 0.0f && rotacijaHrane > -30.0f)
+            {
+                 rotacijaHrane -= 0.3f;
+
+                Console.WriteLine("Vrti se");
+            }
+
+            if (vrataY >= 0.0f && rotacijaHrane <= -30.0f)
+            {
+                vrataY += 2.0f;
+                vrataZ += 0.032f;    
+            }
+
+            if (vrataY >= 90.0f && rotacijaHrane <= -30.0f)
+            {
+                timer.Stop();
+                hranaX = 1.0f;
+                hranaZ = 0.5f;
+
+                vrataX = 0.0f;
+                vrataY = 0.0f;
+                vrataZ = 0.0f;
+
+                rotacijaHrane = 0.0f;
+            }
+
         }
 
         #endregion Konstruktori
@@ -264,7 +395,6 @@ namespace AssimpSample
             float[] light0diffuse = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
             float[] light0specular = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
 
-
             gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_SPOT_CUTOFF, 180.0f);  // tackasti izvor svetlosti je se ugao rasipanja onog reflektora
                                                                         // 360 stepeni (2 puta 180, 180 je pola ugla)
             gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_POSITION, light0pos);
@@ -276,16 +406,15 @@ namespace AssimpSample
             gl.Enable(OpenGL.GL_LIGHTING);
             gl.Enable(OpenGL.GL_LIGHT0);
             
-
-
             //zuta svetlost
             float[] global_ambient_yellow = new float[] { 0.0f, 0.0f, 0.0f, 1.0f };
             gl.LightModel(OpenGL.GL_LIGHT_MODEL_AMBIENT, global_ambient_yellow);
             float[] light0pos_yellow = new float[] { 0.0f, 40.0f, -50.0f, 1.0f };
          
-           float[] light0ambient_yellow = new float[] { ambijentalna0, ambijentalna1, ambijentalna2, 1.0f };
+            float[] light0ambient_yellow = new float[] { ambijentalna0, ambijentalna1, ambijentalna2, 1.0f };
             float[] light0diffuse_yellow = new float[] { 0.5f, 0.5f, 0.0f, 1.0f };
             float[] light0specular_yellow = new float[] { 0.9f, 0.9f, 0.0f, 1.0f };
+
 
             float[] direction = { 0.0f, -1.0f, 0.0f };
             gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_SPOT_DIRECTION, direction);
@@ -300,8 +429,6 @@ namespace AssimpSample
             gl.Enable(OpenGL.GL_LIGHT1);
 
             gl.Enable(OpenGL.GL_NORMALIZE);
-
-
 
         }
 
@@ -362,6 +489,8 @@ namespace AssimpSample
             m_scene.Initialize();
             m_scene2.LoadScene();
             m_scene2.Initialize();
+            m_scene_door.LoadScene();
+            m_scene_door.Initialize();
         }
 
         /// <summary>
@@ -374,7 +503,7 @@ namespace AssimpSample
             
             gl.PushMatrix();
             SetupLighting(gl);
-            gl.Scale(scale_x, scale_x, 1);
+            
             // gl.Translate(0.0f, 1.0f, -m_sceneDistance);
             gl.Translate(0.0f, 1.0f, m_sceneDistance);
             gl.Rotate(m_xRotation, 1.0f, 0.0f, 0.0f);
@@ -387,7 +516,7 @@ namespace AssimpSample
             //postolje
             gl.PushMatrix();
             gl.Disable(OpenGL.GL_TEXTURE_2D);
-            // gl.Translate(0.0f, 0.0f, 0.0f);
+             gl.Translate(0.0f, visinaPodloge, 0.0f);
             gl.Rotate(180, 0, 0);
             cylinder.Height = 1;
             cylinder.BaseRadius = 3.0f;
@@ -407,7 +536,6 @@ namespace AssimpSample
             disk.OuterRadius = 3.0f;
             disk.CreateInContext(gl);
             // faza 2 : tacka 5
-            gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Carpet]);
             disk.Render(gl, RenderMode.Render);
             gl.PopMatrix();
             gl.Enable(OpenGL.GL_TEXTURE_2D);
@@ -422,16 +550,11 @@ namespace AssimpSample
             // faza 2 : tacka 4
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Wood]);
             cube.Render(gl, RenderMode.Render);
-
             gl.PopMatrix();
-            //  gl.PopMatrix();
 
             gl.PushMatrix();
-           // gl.Rotate(180, 0, 0);
             Cube c = new Cube();
-
             gl.Translate(0.0f, -5.0f, 0.0f);
-            // gl.Rotate(-90f, 180f, 0f);
             gl.Scale(0.5f, visinaStola, 0.5f);
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Wood]);
             c.Render(gl, RenderMode.Render);
@@ -446,7 +569,6 @@ namespace AssimpSample
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Wood]);
             s.Render(gl, RenderMode.Render);        
             gl.PopMatrix();
-
 
             //tepih?
             gl.PushMatrix();
@@ -468,18 +590,33 @@ namespace AssimpSample
 
             gl.PushMatrix();
             gl.Disable(OpenGL.GL_TEXTURE_2D);
+            gl.Translate(0.0f, visinaMikrotalasne, 0.0f);
+            gl.Scale(scale_x, scale_x, scale_x);
             m_scene.Draw();
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.PopMatrix();
 
             // crtanje pljeskavice
             gl.PushMatrix();
-
-            gl.Translate(1.0f, 0.0f, 0.5f);
-           // gl.Translate(5.0f, 0.0f, 0.0f);
+            gl.Disable(OpenGL.GL_TEXTURE_2D);
+            gl.Translate(hranaX, visinaHrane, hranaZ);
+            //gl.Translate(5.0f, 0.0f, 0.0f);
+            gl.Scale(scale_x, scale_x, scale_x);
+            gl.PushMatrix();
+            gl.Rotate(0.0f, rotacijaHrane, 0.0f);
+            gl.PopMatrix();    
             m_scene2.Draw();
+            gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.PopMatrix();
 
+            gl.PushMatrix();
+            gl.Disable(OpenGL.GL_TEXTURE_2D);
+            gl.Translate(vrataX, visinaVrati, vrataZ);
+            gl.Rotate(0.0f, vrataY, 0.0f);
+            gl.Scale(scale_x, scale_x, scale_x);
+            m_scene_door.Draw();
+            gl.Enable(OpenGL.GL_TEXTURE_2D);
+            gl.PopMatrix();
 
             gl.PopMatrix();
             gl.Disable(OpenGL.GL_TEXTURE_2D);
@@ -496,7 +633,7 @@ namespace AssimpSample
             gl.PushMatrix();
             gl.Color(1.0f, 1f, 0.0f);
             gl.Translate(1.5f, -4.0f, 0.0f);
-            //     gl.DrawText3D()
+
 
             gl.DrawText3D("Times New Roman Bold", 10, 0.0f, 0.0f, "Predmet: Racunarska grafika");
             gl.Translate(-11.5f, -1.0f, 0.0f);
@@ -546,7 +683,7 @@ namespace AssimpSample
             {
                 m_scene.Dispose();
                 m_scene2.Dispose();
-                
+                m_scene_door.Dispose();
             }
         }
 
