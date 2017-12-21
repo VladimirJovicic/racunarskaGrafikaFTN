@@ -32,11 +32,11 @@ namespace AssimpSample
     {
         #region Atributi
         private enum TextureObjects {Carpet=0,Wood};
-        private string[] m_textureFiles = { @"C:\Users\Vladimir\Desktop\AssimpSample\AssimpSample\images\tepih.jpg",
+        private string[] m_textureFiles = { @"C:\Users\Vladimir\Desktop\AssimpSample\AssimpSample\images\carpet.jpg",
         @"C:\Users\Vladimir\Desktop\AssimpSample\AssimpSample\bin\Debug\images\wood.jpg"};
         private uint[] m_textures = null;
         private readonly int m_textureCount = Enum.GetNames(typeof(TextureObjects)).Length;
-        private float kamera;
+
 
         private float scale_x;
 
@@ -139,11 +139,7 @@ namespace AssimpSample
             set { m_xRotation = value; }
         }
 
-        public float Kamera
-        {
-            get { return kamera; }
-            set { m_xRotation = value; }
-        }
+
 
         public float VisinaVrati
         {
@@ -439,7 +435,7 @@ namespace AssimpSample
         {
             gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             gl.Color(1f, 1f, 0f);
-            kamera = -5;
+
             
             gl.ShadeModel(OpenGL.GL_FLAT);
             gl.Enable(OpenGL.GL_DEPTH_TEST);
@@ -474,7 +470,7 @@ namespace AssimpSample
 
                 gl.Build2DMipmaps(OpenGL.GL_TEXTURE_2D, (int)OpenGL.GL_RGBA8, image.Width, image.Height, OpenGL.GL_BGRA, OpenGL.GL_UNSIGNED_BYTE, imageData.Scan0);
                 gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_LINEAR);		// Linear Filtering
-                gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);      // Linear Filtering
+                gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);     // Linear Filtering
 
                 // faza 2 : tacka 3
                 gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_S, OpenGL.GL_REPEAT);
@@ -491,6 +487,8 @@ namespace AssimpSample
             m_scene2.Initialize();
             m_scene_door.LoadScene();
             m_scene_door.Initialize();
+
+
         }
 
         /// <summary>
@@ -508,11 +506,13 @@ namespace AssimpSample
             gl.Translate(0.0f, 1.0f, m_sceneDistance);
             gl.Rotate(m_xRotation, 1.0f, 0.0f, 0.0f);
             gl.Rotate(m_yRotation, 0.0f, 1.0f, 0.0f);
-            
+
             //faza 2 : tacka 6
-            gl.LookAt(1.0f,0.0f, kamera, 
-                      -1.0f, -1.0f, -1.0f,
-                      0.0f, 1.0f, 0.0f);
+            gl.LookAt(1.0f, 1.0f, 4.0f,
+                      0.0f, 0.0f, 0.0f,
+                      0.0f, 5.0f, 0.0f);
+
+
             //postolje
             gl.PushMatrix();
             gl.Disable(OpenGL.GL_TEXTURE_2D);
@@ -525,17 +525,20 @@ namespace AssimpSample
             gl.Color(0.2265625f, 0f, 0.0f);
             gl.Rotate(-90f, 0f, 0f);
             cylinder.CreateInContext(gl);
+            gl.FrontFace(OpenGL.GL_CCW);
             cylinder.Render(gl, RenderMode.Render);
 
             //zatvara se postolje
             gl.PushMatrix();
-            gl.Translate(0.0f, 0.0f, 1.0f);
+           // gl.Translate(0.0f, 0.0f, 4.0f);
+            gl.Rotate(0.0f, 180.0f, 0.0f);
             Disk disk = new Disk();
             gl.Color(0.2265625f, 0f, 0.0f);
             disk.InnerRadius = 0;
             disk.OuterRadius = 3.0f;
             disk.CreateInContext(gl);
             // faza 2 : tacka 5
+            gl.FrontFace(OpenGL.GL_CCW);
             disk.Render(gl, RenderMode.Render);
             gl.PopMatrix();
             gl.Enable(OpenGL.GL_TEXTURE_2D);
@@ -549,6 +552,7 @@ namespace AssimpSample
             gl.Color(0.30859375f, 0.1484375f, 0.07421875f);
             // faza 2 : tacka 4
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Wood]);
+            gl.FrontFace(OpenGL.GL_CCW);
             cube.Render(gl, RenderMode.Render);
             gl.PopMatrix();
 
@@ -557,6 +561,7 @@ namespace AssimpSample
             gl.Translate(0.0f, -5.0f, 0.0f);
             gl.Scale(0.5f, visinaStola, 0.5f);
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Wood]);
+            gl.FrontFace(OpenGL.GL_CCW);
             c.Render(gl, RenderMode.Render);
             gl.PopMatrix();
 
@@ -567,22 +572,24 @@ namespace AssimpSample
             gl.Translate(0.0f, visinaPostolja, 0.0f);
             gl.Scale(3.5f, 0.4, 3.5f);
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Wood]);
+            gl.FrontFace(OpenGL.GL_CCW);
             s.Render(gl, RenderMode.Render);        
             gl.PopMatrix();
 
             //tepih?
             gl.PushMatrix();
-            gl.Translate(-5.0f, visinaTepiha, 5.0f);
-            gl.Rotate(-90.0f, 0.0f, 0.0f);
+            gl.Translate(5.0f, visinaTepiha, 5.0f);
+            gl.Rotate(-90.0f, 180.0f, 0.0f);
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Carpet]);
             gl.Begin(OpenGL.GL_QUADS);
-            gl.TexCoord(0.0f, 0.0f);
-            gl.Vertex(0.0f, 0.0f);
             gl.TexCoord(0.0f, 1.0f);
-            gl.Vertex(0.0f, 10.0f);
-            gl.TexCoord(1.0f, 1.0f);
-            gl.Vertex(10.0f, 10.0f);
             gl.TexCoord(1.0f, 0.0f);
+            gl.Vertex(0.0f, 0.0f);
+            gl.TexCoord(1.0f, 1.0f);
+            gl.Vertex(0.0f, 10.0f);
+            gl.TexCoord(0.0f, 1.0f);
+            gl.Vertex(10.0f, 10.0f);
+            gl.TexCoord(0.0f, 0.0f);
             gl.Vertex(10.0f,0.0f);
             gl.End();
            // gl.Enable(OpenGL.GL_CULL_FACE);
@@ -592,6 +599,7 @@ namespace AssimpSample
             gl.Disable(OpenGL.GL_TEXTURE_2D);
             gl.Translate(0.0f, visinaMikrotalasne, 0.0f);
             gl.Scale(scale_x, scale_x, scale_x);
+            gl.FrontFace(OpenGL.GL_CCW);
             m_scene.Draw();
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.PopMatrix();
