@@ -32,8 +32,8 @@ namespace AssimpSample
     {
         #region Atributi
         private enum TextureObjects {Carpet=0,Wood};
-        private string[] m_textureFiles = { @"C:\Users\Vladimir\Desktop\AssimpSample\AssimpSample\images\carpet.jpg",
-        @"C:\Users\Vladimir\Desktop\AssimpSample\AssimpSample\bin\Debug\images\wood.jpg"};
+        private string[] m_textureFiles = { @"..//../images/carpet2.jpg",
+        @"..//../images\wood3.jpg"};
         private uint[] m_textures = null;
         private readonly int m_textureCount = Enum.GetNames(typeof(TextureObjects)).Length;
 
@@ -460,7 +460,7 @@ namespace AssimpSample
                 gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[i]);
 
                 // Ucitaj sliku i podesi parametre teksture
-                Bitmap image = new Bitmap(m_textureFiles[i]);
+                System.Drawing.Bitmap image = new Bitmap(m_textureFiles[i]);
                 // rotiramo sliku zbog koordinantog sistema opengl-a
                 image.RotateFlip(RotateFlipType.RotateNoneFlipY);
                 Rectangle rect = new Rectangle(0, 0, image.Width, image.Height);
@@ -577,22 +577,56 @@ namespace AssimpSample
             gl.PopMatrix();
 
             //tepih?
+
+
             gl.PushMatrix();
             gl.Translate(5.0f, visinaTepiha, 5.0f);
             gl.Rotate(-90.0f, 180.0f, 0.0f);
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Carpet]);
             gl.Begin(OpenGL.GL_QUADS);
-            gl.TexCoord(0.0f, 1.0f);
             gl.TexCoord(1.0f, 0.0f);
             gl.Vertex(0.0f, 0.0f);
             gl.TexCoord(1.0f, 1.0f);
+            gl.Vertex(0.0f, 5.0f);
+            gl.TexCoord(0.0f, 1.0f);
+            gl.Vertex(5.0f, 5.0f);
+            gl.TexCoord(0.0f, 0.0f);
+            gl.Vertex(5.0f,0.0f);
+            gl.End();
+
+            gl.Begin(OpenGL.GL_QUADS);
+            gl.TexCoord(1.0f, 0.0f);
+            gl.Vertex(0.0f, 5.0f);
+            gl.TexCoord(1.0f, 1.0f);
             gl.Vertex(0.0f, 10.0f);
+            gl.TexCoord(0.0f, 1.0f);
+            gl.Vertex(5.0f, 10.0f);
+            gl.TexCoord(0.0f, 0.0f);
+            gl.Vertex(5.0f, 5.0f);
+            gl.End();
+
+            gl.Begin(OpenGL.GL_QUADS);
+            gl.TexCoord(1.0f, 0.0f);
+            gl.Vertex(5.0f, 5.0f);
+            gl.TexCoord(1.0f, 1.0f);
+            gl.Vertex(5.0f, 10.0f);
             gl.TexCoord(0.0f, 1.0f);
             gl.Vertex(10.0f, 10.0f);
             gl.TexCoord(0.0f, 0.0f);
-            gl.Vertex(10.0f,0.0f);
+            gl.Vertex(10.0f, 5.0f);
             gl.End();
-           // gl.Enable(OpenGL.GL_CULL_FACE);
+
+            gl.Begin(OpenGL.GL_QUADS);
+            gl.TexCoord(1.0f, 0.0f);
+            gl.Vertex(5.0f, 0.0f);
+            gl.TexCoord(1.0f, 1.0f);
+            gl.Vertex(5.0f, 5.0f);
+            gl.TexCoord(0.0f, 1.0f);
+            gl.Vertex(10.0f, 5.0f);
+            gl.TexCoord(0.0f, 0.0f);
+            gl.Vertex(10.0f, 0.0f);
+            gl.End();
+            // gl.Enable(OpenGL.GL_CULL_FACE);
             gl.PopMatrix();
 
             gl.PushMatrix();
